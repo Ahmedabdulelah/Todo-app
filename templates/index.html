@@ -35,7 +35,7 @@
             {% for d in data %}
             <li><input class="check-completed" data-id="{{d.id}}" type="checkbox"{% if d.completed %} checked {% endif %}>
                 {{d.description}}
-                <!-- <button class="delete-button" data-id="{{todo.id}}">&cross;</button> -->
+                <button class="delete-button" data-id="{{todo.id}}">&cross;</button>
             </li>
             {% endfor %}
         </ul>
