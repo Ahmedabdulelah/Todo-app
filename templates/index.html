@@ -1,8 +1,6 @@
 <html>
     <head>
         <title>Todo App</title>
-    </head>
-    <body>
         <style>
             .hidden{
                 display:none;
@@ -26,16 +24,18 @@
                 float: right;
             }
         </style>
+    </head>
+    <body>
         <form id="form">
             <input type="text" id="description" name="description">
             <input type="submit" value="create">
         </form>
-        <!-- <div class = "hidden" id = "error"> Something went wrong! </div> -->
+        <div class = "hidden" id = "error"> Something went wrong! </div>
         <ul id="todos">
             {% for d in data %}
             <li><input class="check-completed" data-id="{{d.id}}" type="checkbox"{% if d.completed %} checked {% endif %}>
                 {{d.description}}
-                <button class="delete-button" data-id="{{todo.id}}">&cross;</button>
+                <button class="delete-button" data-id="{{d.id}}">&cross;</button>
             </li>
             {% endfor %}
         </ul>
@@ -46,7 +46,7 @@
                 for(let i = 0; i<deletebtn.length; i++){
                     const btn = deletebtn[i]
                     btn.onclick = function(e){
-                        const todoId = e.terget.dataset['id']
+                        const todoId = e.target.dataset['id']
                         fetch('/todos/' + todoId,{
                             method : 'DELETE'
                         });
@@ -57,9 +57,9 @@
                 for (let i = 0; i<checkboxes.length; i++){
                     const checkbox = checkboxes[i];
                     checkbox.onchange = function(e){
-                        const newcompleted = e.terget.checked;
-                        const todoId = e.terget.dataset['id'];
-                        fetch('/todos/'+ todoId +'set-completed', {
+                        const newcompleted = e.target.checked;
+                        const todoId = e.target.dataset['id'];
+                        fetch('/todos/'+ todoId +'/set-completed', {
                             method : 'POST',
                             body : JSON.stringify({
                                 'completed' :newcompleted

@@ -10,7 +10,7 @@ class Todo(db.Model):
     __tablename__ = 'todos'
     id = db.Column(db.Integer , primary_key = True)
     description = db.Column(db.String(),nullable = False)
-    completed = db.Column(db.Boolean, nullable=False)
+    completed = db.Column(db.Boolean, nullable=False ,default = False)
 
 
     def __repr__(self):
@@ -41,32 +41,39 @@ def create_todo():
 
 @app.route('/todos/<todoId>/set-completed' , methods=['POST'])
 def set_completed_todo(todoId):
+    error = False
     try:
         completed = request.get_json()['completed']
         todo = Todo.query.get(todoId)
         todo.completed = completed
         db.session.commit()
     except:
+        error = True
         db.session.rollback()
+        print(sys.exc_info())
     finally:
         db.session.close()
         return redirect(url_for('index'))    
 
 @app.route('/todos/<todoId>' , methods=['DELETE'])
 def delete_todo(todoId):
+    error = False
     try:
         Todo.query.filter_by(id=todoId).delete()
         db.session.commit()
     except:
+        error = True
         db.session.rollback()
+        print(sys.exc_info())
     finally:
         db.session.close()
+    if not error:    
         return jsonify({'success': True})            
 
 
 @app.route('/')
 def index():
-    return render_template('index.html', data =Todo.query.all())
+    return render_template('index.html', data =Todo.query.order_by('id').all())
 
 
 if __name__ == "__main__":
